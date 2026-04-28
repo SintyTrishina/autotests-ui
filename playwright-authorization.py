@@ -5,20 +5,21 @@ with sync_playwright() as playwright:
     chromium = playwright.chromium.launch(headless=False)  # запуск браузера хром headless (False - с UI/True - без UI)
     page = chromium.new_page()  # создание новой вкладки
 
-    page.goto(
-        'https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/login')  # открыть страницу по ссылке
+    page.goto('https://nikita-filonov.github.io/qa-automation-engineer-ui-course/#/auth/login')  # открыть страницу по ссылке
 
-    email_input = page.locator(
-        '//div[@data-testid="login-form-email-input"]//div//input')  # находим по локатору поле email
+    # email_input = page.locator('//div[@data-testid="login-form-email-input"]//div//input')  # находим по локатору поле email
+    email_input = page.get_by_test_id('login-form-email-input').locator('input')  # находит по data-testid div и внутри него input
     email_input.fill('user.name@gmail.com')  # заполняем поле email
 
     password_input = page.locator('//div[@data-testid="login-form-password-input"]//div//input')
     password_input.fill('password')
 
-    login_button = page.locator('//button[@data-testid="login-page-login-button"]')
+    # login_button = page.locator('//button[@data-testid="login-page-login-button"]')
+    login_button = page.get_by_test_id('login-page-login-button')  # поиск по data-testid
     login_button.click()  # нажатие на кнопку
 
-    wrong_email_or_password_alert = page.locator('//div[@data-testid="login-page-wrong-email-or-password-alert"]')
+    # wrong_email_or_password_alert = page.locator('//div[@data-testid="login-page-wrong-email-or-password-alert"]')
+    wrong_email_or_password_alert = page.get_by_test_id('login-page-wrong-email-or-password-alert')
     expect(wrong_email_or_password_alert).to_be_visible()  # ожидаем что локатор виден (проверка видимости элемента)
     expect(wrong_email_or_password_alert).to_have_text("Wrong email or password")  # проверка текста внутри элемента
 
